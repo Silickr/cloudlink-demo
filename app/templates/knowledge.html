@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Demo-验证知识{% endblock %}
+
+{% block page_content %}
+<div>验证知识页面免登(仅在知识TAB中有效)
+        {% if userId %}, 当前用户<b>{{ userId }}</b>
+        {% else %}
+        ，无法获取用户身份
+        {% endif %}</div>
+<hr>
+<div>* 用户首次打开页面，将弹出提示，进行绑定，绑定完成后记录cookie信息下次不再进行绑定操作</div>
+<br>
+<button class="btn btn-primary btn-default" data-toggle="modal" data-target="#authModal">认证</button>
+<button class="btn btn-default" id="del-userid" onclick="delUserId()">取消绑定</button>
+<br><br>
+<div class="well">{{ text }}</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="authModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">获取你的用户信息</h4>
+                </div>
+                <div class="modal-body">知识将使用你的CloudLink用户信息：<span id="modal_userinfo">waiting</span></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="auth_confirm">同意</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+    <!--生产环境脚本引用-->
+    <script src="https://cloudlinkworkplace.huaweicloud.com/wecode/docs/jsapi/1.0.0/hwh5-cloudonline.js"></script> 
+    <script src="{{ url_for('static', filename='js/app.js')}}?v=2019012467"></script>
+    <script src="{{ url_for('static', filename='js/vconsole.min.js')}}"></script>
+    <script>window.vConsole = new window.VConsole();</script>
+{% endblock %}
