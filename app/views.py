@@ -1,11 +1,12 @@
 # -*- coding: UTF-8 -*-
 from app import app
-from flask import request, make_response, render_template, jsonify
+from flask import request, make_response, render_template, jsonify, session, g
 from knowledge_entity import KNOWLEDGE_ENTITY
 from datetime import datetime
 from time import mktime
 from wsgiref.handlers import format_date_time
-from api_explore import CloudLink
+from auth import authenticate
+from demo import demo_get_user_id
 
 
 @app.route('/')
@@ -32,10 +33,9 @@ def knowledge():
 @app.route('/userid/<code>')
 def userid(code):
     if code is not None:
-        params = {'code': code}
-        cloudlink = CloudLink(params)
-        user_id = cloudlink.get_user_id()
-        return jsonify({'code': '0', 'userId': user_id})
+        client = authenticate(code)
+        userId = demo_get_user_id(client)
+        return jsonify({'code': '0', 'userId': userId})
     return jsonify({'code': '101', 'message': 'code is missing!'})
 
 
@@ -46,3 +46,5 @@ def add_header(response):
     response.headers['Last-Modified'] = format_date_time(stamp)
     response.headers['Cache-Control'] = 'max-age=300'
     return response
+
+
